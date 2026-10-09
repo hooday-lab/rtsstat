@@ -294,7 +294,7 @@ const rival={
   sugg(p){return rivalSuggestions(p.a,p.b).map(s=>({
     h:`${s.ca} ${pl(s.ca,RM[s.key].n)} kontra ${s.cb}`+(s.n?' (ostatnie 5)':''),
     s:`${sn(p.a)}${s.tagA?' – '+s.tagA:''} · ${sn(p.b)}${s.tagB?' – '+s.tagB:''}`,
-    set:{key:s.key,n:s.n}}))},
+    q:upcomingFor(p.a,p.b)?'Jak to wpłynie na najbliższy mecz? 👇':'Przypadek czy trend? 👇',set:{key:s.key,n:s.n}}))},
   svg(p,bg){if(isV())return this.svgV(p,bg);
     const H=header(p);let s=H.svg;
     const R=RM[p.key];const y0=H.bottom+24,bottomY=972;
@@ -370,7 +370,7 @@ const rival={
     s+=tx(lx,ly,'pasek = barwy rywala',{size:22,fam:'BA',w:600,fill:'#f1dede'})+`</g>`;
     return shell(s+footerV(p),bg);
   },
-  post(p){return `${p.title}.\n\n${p.sub}\n${p.date1?p.date1+' · '+p.date2+'\n':''}\nA Wy co typujecie? 👇\n#RTSstat #Widzew`}
+  post(p){return `${p.title}.\n\n${p.sub}\n${p.date1?p.date1+' · '+p.date2+'\n':''}\n${p.q||'A Wy co typujecie? 👇'}\n#RTSstat #Widzew`}
 };
 
 /* --- mecz --- */
@@ -387,7 +387,7 @@ const matchT={
     for(const k in auto){if(force||!p.ed||!p.ed[k])p[k]=auto[k]}
   },
   fields:p=>[{k:'fid',l:'Mecz',t:'sel',num:1,o:fixOpts()},{k:'title',l:'Tytuł',t:'text'},{k:'sub',l:'Podtytuł',t:'area'},{k:'date2',l:'Pasek: termin',t:'text'},{k:'foot',l:'Stopka',t:'text'}],
-  sugg(){return []},
+  sugg(p){return matchInsights(p.fid)},
   svg(p,bg){if(isV())return this.svgV(p,bg);
     const f=fxById[p.fid],h=f[3],a=f[4];
     const H=header({...p,date1:''});let s=H.svg;
@@ -464,7 +464,7 @@ const matchT={
     });
     return shell(s+footerV(p),bg);
   },
-  post(p){const f=fxById[p.fid];return `${p.title}.\n\n${p.sub}\n\nCo z tego meczu zostaje Wam w głowie? 👇\n#RTSstat #Widzew`}
+  post(p){const f=fxById[p.fid];return `${p.title}.\n\n${p.sub}\n\n${p.q||'Co z tego meczu zostaje Wam w głowie? 👇'}\n#RTSstat #Widzew`}
 };
 
 /* --- zawodnik --- */
@@ -500,11 +500,7 @@ const player={
   fields:p=>[{k:'team',l:'Drużyna',t:'sel',num:1,o:teamOpts(),dep:1},{k:'pid',l:'Zawodnik',t:'sel',num:1,o:plOpts(p.team)},
     {k:'hero',l:'Wyróżniona liczba',t:'sel',o:[['auto','Automatycznie (najlepsza w lidze)'],...Object.entries(PM).map(([k,v])=>[k,v.lab])]},
     {k:'title',l:'Tytuł',t:'text'},{k:'sub',l:'Podtytuł',t:'area'},{k:'foot',l:'Stopka',t:'text'}],
-  sugg(p){
-    const out=[];PL.filter(r=>r[2]===+p.team).forEach(r=>{['goals','assists','keyp','rating'].forEach(k=>{
-      const rk=prank(r[0],k),v=r[PM[k].i];if(rk&&rk<=3&&v>0)out.push({h:`${r[1]}: ${PM[k].dec?fmt(v,2):v} ${PM[k].lab.toLowerCase()}`,s:`#${rk} w lidze`,set:{pid:r[0],hero:k},sc:4-rk})})});
-    return out.sort((a,b)=>b.sc-a.sc).slice(0,6);
-  },
+  sugg(p){return playerSuggestions(p)},
   svg(p,bg){if(isV())return this.svgV(p,bg);
     const r=PI[p.pid],H=header({...p,tag:'Zawodnik'});let s=H.svg;
     const hk=this.heroKey(p),hm=PM[hk];
@@ -553,7 +549,7 @@ const player={
     });
     return shell(s+footerV(p),bg);
   },
-  post(p){const r=PI[p.pid];return `${r[1]}.\n\n${p.sub}\n\nKtóra z tych liczb robi na Was największe wrażenie? 👇\n#RTSstat #Widzew`}
+  post(p){const r=PI[p.pid];return `${r[1]}.\n\n${p.sub}\n\n${p.q||'Która z tych liczb robi na Was największe wrażenie? 👇'}\n#RTSstat #Widzew`}
 };
 
 /* --- porównanie --- */
@@ -572,7 +568,7 @@ const cmp={
   fields:p=>[{k:'a',l:'Drużyna A',t:'sel',num:1,o:teamOpts()},{k:'b',l:'Drużyna B',t:'sel',num:1,o:teamOpts()},
     {k:'keys',l:'Wskaźniki (max 7)',t:'checks',o:Object.entries(CM).map(([k,v])=>[k,v.lab])},
     {k:'title',l:'Tytuł',t:'text'},{k:'sub',l:'Podtytuł',t:'area'},{k:'foot',l:'Stopka',t:'text'}],
-  sugg(p){return [{h:'Dobierz 6 najbardziej kontrastowych',s:'według względnej różnicy między drużynami',set:{keys:cmpAuto(p.a,p.b)}}]},
+  sugg(p){return cmpSuggestions(p.a,p.b)},
   svg(p,bg){if(isV())return this.svgV(p,bg);
     const H=header({...p,date1:'',date2:''});let s=H.svg;
     const y0=H.bottom+62,ks=(p.keys||[]).slice(0,7);
@@ -601,27 +597,171 @@ const cmp={
     });
     return shell(s+footerV(p),bg);
   },
-  post(p){return `${p.title}.\n\n${p.sub}\n\nCzyja to będzie historia? 👇\n#RTSstat #Widzew`}
+  post(p){return `${p.title}.\n\n${p.sub}\n\n${p.q||'Czyja to będzie historia? 👇'}\n#RTSstat #Widzew`}
 };
 
 /* --- własna liczba + kopalnia faktów --- */
-function facts(){
-  const out=[];const all=Object.keys(T).map(id=>[+id,AG[id]]);
-  const tops=[
-    ['Remisy','R',['remis','remisy','remisów'],a=>a.R],['Wygrane','W',['wygrana','wygrane','wygranych'],a=>a.W],['Porażki','L',['porażka','porażki','porażek'],a=>a.L],
-    ['Gole strzelone','GF',['bramka strzelona','bramki strzelone','bramek strzelonych'],a=>a.GF],['Gole stracone','GA',['bramka stracona','bramki stracone','bramek straconych'],a=>a.GA],
-    ['Mecze bez straty gola','CS',['mecz bez straty gola','mecze bez straty gola','meczów bez straty gola'],a=>a.CS]];
-  tops.forEach(([nm,,n,f])=>{
-    const sorted=all.slice().sort((x,y)=>f(y[1])-f(x[1]));const top=sorted[0],wid=all.find(x=>x[0]===WID);
-    out.push({h:`${f(top[1])} ${pl(f(top[1]),n)} – ${sn(top[0])}`,s:`${nm}: lider ligi po ${lastRound} kolejkach`,set:{big:String(f(top[1])),label:`${n[2]} – ${sn(top[0])}, najwięcej w lidze`,l1:`Stan po ${lastRound} kolejkach Ekstraklasy`,l2:'',tag:nm}});
-    const rk=1+all.filter(x=>f(x[1])>f(wid[1])).length;
-    if(top[0]!==WID&&(rk<=3||rk>=16))out.push({h:`Widzew: ${f(wid[1])} ${pl(f(wid[1]),n)} (#${rk} w lidze)`,s:nm,set:{big:String(f(wid[1])),label:`${n[2]} Widzewa`,l1:`#${rk} w lidze po ${lastRound} kolejkach`,l2:`Lider: ${sn(top[0])} (${f(top[1])})`,tag:nm}});
+/* --- silnik ciekawostek: podpowiedzi dla każdej konfiguracji --- */
+const LGI=Object.keys(T).map(Number),NL=LGI.length;
+const NOUN_G=['gol','gole','goli'];
+function lvals(f){const o={};LGI.forEach(id=>{const v=f(id);if(v!=null&&isFinite(v))o[id]=v});return o}
+function lrank(vals,id){const v=vals[id];if(v==null)return null;const a=Object.values(vals);return {r:1+a.filter(x=>x>v).length,ties:a.filter(x=>x===v).length,n:a.length}}
+function homePts(t,home){const m=TM[t].filter(x=>x.home===home);if(!m.length)return null;return m.reduce((a,x)=>a+(x.res==='W'?3:x.res==='R'?1:0),0)/m.length}
+function pts5(t){const m=TM[t].slice(-5);return {p:m.reduce((a,x)=>a+(x.res==='W'?3:x.res==='R'?1:0),0),n:m.length}}
+const TMET=[
+ {k:'pts',l:'punktów na mecz',d:2,f:t=>AG[t].avg.pts,q:'Czy ten dorobek oddaje to, co widzimy na boisku? 👇'},
+ {k:'gf',l:'goli strzelonych na mecz',d:2,f:t=>AG[t].avg.gf,q:'Skąd tyle (lub tak mało) goli – styl czy przypadek? 👇'},
+ {k:'ga',l:'goli straconych na mecz',d:2,f:t=>AG[t].avg.ga,q:'Obrona czy bramkarz – kto za to odpowiada? 👇'},
+ {k:'xg',l:'xG na mecz (jakość sytuacji)',d:2,f:t=>AG[t].avg.xg,q:'Czy te sytuacje przekładają się na gole? 👇'},
+ {k:'xga',l:'xG rywali na mecz (sytuacje, które oddajemy)',d:2,f:t=>AG[t].avg.xga,q:'Czy widać to po meczach? 👇'},
+ {k:'shots',l:'strzałów na mecz',d:1,f:t=>AG[t].avg.shots,q:'Dużo strzałów, ale czy dobrych? 👇'},
+ {k:'on',l:'strzałów celnych na mecz',d:1,f:t=>AG[t].avg.on,q:'Kto powinien strzelać więcej? 👇'},
+ {k:'poss',l:'posiadania piłki',u:'%',d:0,f:t=>AG[t].avg.poss,q:'Posiadanie piłki to siła czy pułapka? 👇'},
+ {k:'corners',l:'rzutów rożnych na mecz',d:1,f:t=>AG[t].avg.corners,q:'Czy stałe fragmenty to nasza broń? 👇'},
+ {k:'fouls',l:'fauli na mecz',d:1,f:t=>AG[t].avg.fouls,q:'Twarda gra czy brak kontroli? 👇'},
+ {k:'yellow',l:'żółtych kartek na mecz',d:1,f:t=>AG[t].avg.yellow,q:'Za dużo kartek czy sędziowie przesadzają? 👇'},
+ {k:'R',l:'remisów',n:['remis','remisy','remisów'],d:0,f:t=>AG[t].R,q:'Remis to dla nas krok do przodu czy stracone punkty? 👇'},
+ {k:'W',l:'zwycięstw',n:['zwycięstwo','zwycięstwa','zwycięstw'],d:0,f:t=>AG[t].W,q:'Czy to wystarczy, żeby marzyć o więcej? 👇'},
+ {k:'L',l:'porażek',n:['porażka','porażki','porażek'],d:0,f:t=>AG[t].L,q:'Gdzie leży przyczyna? 👇'},
+ {k:'CS',l:'meczów bez straty gola',n:['mecz bez straty gola','mecze bez straty gola','meczów bez straty gola'],d:0,f:t=>AG[t].CS,q:'Co daje tę szczelność? 👇'},
+ {k:'home',l:'punktów na mecz u siebie',d:2,f:t=>homePts(t,true),q:'Czy dom jest dla nas twierdzą? 👇'},
+ {k:'away',l:'punktów na mecz na wyjeździe',d:2,f:t=>homePts(t,false),q:'Czemu na wyjeździe jest inaczej? 👇'}
+];
+const STR=[
+ {l:'meczów bez porażki z rzędu',n:['mecz bez porażki z rzędu','mecze bez porażki z rzędu','meczów bez porażki z rzędu'],pred:x=>x.res!=='P',min:3,q:'Jak długo jeszcze potrwa ta seria? 👇'},
+ {l:'meczów bez zwycięstwa z rzędu',n:['mecz bez zwycięstwa z rzędu','mecze bez zwycięstwa z rzędu','meczów bez zwycięstwa z rzędu'],pred:x=>x.res!=='W',min:4,q:'Co trzeba zmienić, żeby wreszcie wygrać? 👇'},
+ {l:'remisów z rzędu',n:['remis z rzędu','remisy z rzędu','remisów z rzędu'],pred:x=>x.res==='R',min:2,q:'Kolejny remis czy przełamanie? 👇'},
+ {l:'meczów bez gola z rzędu',n:['mecz bez gola z rzędu','mecze bez gola z rzędu','meczów bez gola z rzędu'],pred:x=>x.gf===0,min:2,q:'Kto ma przełamać tę niemoc? 👇'},
+ {l:'meczów bez straty gola z rzędu',n:['mecz bez straty gola z rzędu','mecze bez straty gola z rzędu','meczów bez straty gola z rzędu'],pred:x=>x.ga===0,min:2,q:'Jak długo utrzymamy zero z tyłu? 👇'},
+ {l:'meczów ze strzelonym golem z rzędu',n:['mecz ze strzelonym golem z rzędu','mecze ze strzelonym golem z rzędu','meczów ze strzelonym golem z rzędu'],pred:x=>x.gf>0,min:5,q:'Kto strzeli w następnym meczu? 👇'},
+ {l:'zwycięstw z rzędu',n:['zwycięstwo z rzędu','zwycięstwa z rzędu','zwycięstw z rzędu'],pred:x=>x.res==='W',min:2,q:'Czy to początek dłuższej serii? 👇'},
+ {l:'porażek z rzędu',n:['porażka z rzędu','porażki z rzędu','porażek z rzędu'],pred:x=>x.res==='P',min:2,q:'Czy to już moment na zmianę? 👇'}
+];
+function streakLen(t,pred){const m=TM[t];let n=0;for(let i=m.length-1;i>=0;i--){if(pred(m[i]))n++;else break}return n}
+function teamInsights(t,ctx){
+  const out=[],name=sn(t),bonus=(t===WID?1.5:(t===nextOpp?1.2:0));
+  TMET.forEach(m=>{
+    const vals=lvals(m.f),R=lrank(vals,t);if(!R||R.ties>2)return;
+    let sc=0,txt='';
+    if(R.r===1){sc=3;txt='najwięcej w lidze'}else if(R.r===R.n){sc=3;txt='najmniej w lidze'}
+    else if(R.r===2){sc=2;txt='#2 w lidze'}else if(R.r===R.n-1){sc=2;txt='#'+R.r+' w lidze (od końca #2)'}else return;
+    const v=vals[t],big=fmt(v,m.d)+(m.u||''),ml=m.n?pl(v,m.n):m.l;
+    out.push({h:`${name}: ${big} ${ml} – ${txt}`,s:`${ctx||'Stan po '+lastRound+' kolejkach'}`,score:sc+bonus,q:m.q,
+      set:{big,label:`${ml} – ${name}`,l1:`${txt.charAt(0).toUpperCase()+txt.slice(1)} po ${lastRound} kolejkach Ekstraklasy`,l2:'',tag:name}});
   });
-  const pt=[['goals','bramek','Król strzelców'],['assists','asyst','Najwięcej asyst'],['keyp','kluczowych podań','Kluczowe podania']];
-  pt.forEach(([k,nm,tg])=>{const top=PL.slice().sort((a,b)=>b[PM[k].i]-a[PM[k].i])[0];
-    out.push({h:`${top[PM[k].i]} ${nm} – ${top[1]}`,s:`${tg} (${sn(top[2])})`,set:{big:String(top[PM[k].i]),label:`${nm} – ${top[1]} (${sn(top[2])})`,l1:`${tg} po ${lastRound} kolejkach`,l2:'',tag:tg}})});
+  STR.forEach(m=>{
+    const n=streakLen(t,m.pred);if(n<m.min)return;
+    const lg=LGI.map(id=>streakLen(id,m.pred)),mx=Math.max(...lg);
+    const sl=pl(n,m.n);
+    out.push({h:`${name}: ${n} ${sl}`,s:n===mx?'najdłuższa taka seria w lidze':'aktualna seria',score:n*.8+(n===mx?2:0)+bonus,q:m.q,
+      set:{big:String(n),label:`${sl} – ${name}`,l1:n===mx?'Najdłuższa taka seria w lidze':'Aktualna seria',l2:'',tag:'Seria'}});
+  });
+  const f5=pts5(t);
+  if(TM[t].length>=7&&f5.n===5){
+    const ap=AG[t].avg.pts,d=f5.p/5-ap;
+    if(Math.abs(d)>=0.6)out.push({h:`${name}: ${f5.p} pkt w ostatnich 5 meczach`,s:`średnio ${fmt(f5.p/5,2)} wobec ${fmt(ap,2)} w sezonie`,score:Math.abs(d)*2+bonus,
+      q:d>0?'Czy to forma na dłużej? 👇':'Czy to chwilowy kryzys? 👇',
+      set:{big:String(f5.p),label:`punktów w ostatnich 5 meczach – ${name}`,l1:`Średnio ${fmt(f5.p/5,2)} pkt na mecz wobec ${fmt(ap,2)} w całym sezonie`,l2:'',tag:'Forma'}});
+  }
+  const luck=AG[t].avg.gf-AG[t].avg.xg;
+  if(isFinite(luck)&&Math.abs(luck)>=.35)out.push({h:`${name}: gole ${luck>0?'ponad':'poniżej'} xG (${luck>0?'+':'−'}${fmt(Math.abs(luck),2)} na mecz)`,s:'skuteczność kontra jakość sytuacji',score:Math.abs(luck)*5+bonus,
+    q:luck>0?'Skuteczność czy szczęście? 👇':'Pech czy brak skuteczności? 👇',
+    set:{big:(luck>0?'+':'−')+fmt(Math.abs(luck),2),label:`gola na mecz ${luck>0?'ponad':'poniżej'} xG – ${name}`,l1:`${fmt(AG[t].avg.gf,2)} goli kontra ${fmt(AG[t].avg.xg,2)} xG na mecz`,l2:'',tag:'Skuteczność'}});
   return out;
 }
+function facts(){
+  const items=[...teamInsights(WID),...(nextOpp?teamInsights(nextOpp,'Rywal z najbliższego meczu'):[])];
+  ['pts','gf','ga','xg','R','CS','poss','shots'].forEach(k=>{
+    const m=TMET.find(x=>x.k===k),vals=lvals(m.f),top=LGI.filter(id=>vals[id]!=null).sort((a,b)=>vals[b]-vals[a])[0];
+    if(top===WID||top===nextOpp)return;
+    const v=vals[top],big=fmt(v,m.d)+(m.u||''),ml=m.n?pl(v,m.n):m.l;
+    items.push({h:`${sn(top)}: ${big} ${ml} – najwięcej w lidze`,s:'lider ligi',score:1.5,q:m.q,set:{big,label:`${ml} – ${sn(top)}, najwięcej w lidze`,l1:`Stan po ${lastRound} kolejkach Ekstraklasy`,l2:'',tag:'Lider ligi'}});
+  });
+  const hs=new Set(),uq=[];items.forEach(x=>{if(!hs.has(x.h)){hs.add(x.h);uq.push(x)}});const out=uq.sort((a,b)=>b.score-a.score).slice(0,16);
+  const pt=[['goals','bramek','Król strzelców'],['assists','asyst','Najwięcej asyst'],['keyp','kluczowych podań','Kluczowe podania']];
+  pt.forEach(([k,nm,tg])=>{const top=PL.slice().sort((a,b)=>b[PM[k].i]-a[PM[k].i])[0];
+    out.push({h:`${top[PM[k].i]} ${nm} – ${top[1]}`,s:`${tg} (${sn(top[2])})`,q:'Kto jest dla Was najlepszy w tej klasyfikacji? 👇',set:{big:String(top[PM[k].i]),label:`${nm} – ${top[1]} (${sn(top[2])})`,l1:`${tg} po ${lastRound} kolejkach`,l2:'',tag:tg}})});
+  return out;
+}
+function matchInsights(fid){
+  const f=fxById[fid];if(!f)return[];
+  const h=f[3],a=f[4],out=[],sc={[h]:f[5],[a]:f[6]};
+  const rows={[h]:ts[fid+'_'+h],[a]:ts[fid+'_'+a]},opp={[h]:a,[a]:h};
+  const gl=D.goals.filter(g=>g[0]===fid).sort((x,y)=>x[1]-y[1]);
+  const rk=(idx,v)=>1+D.tstats.filter(r=>r[idx]!=null&&r[idx]>v).length;
+  const gn=n=>`${n} ${pl(n,NOUN_G)}`;
+  [h,a].forEach(t=>{
+    const r=rows[t],o=rows[opp[t]],nm=sn(t),on=sn(opp[t]),bonus=(t===WID?1:0);if(!r||!o)return;
+    const res=sc[t]>sc[opp[t]]?'W':sc[t]<sc[opp[t]]?'P':'R';
+    if(r[12]!=null){const d=sc[t]-r[12];
+      if(d>=1)out.push({h:`${nm}: ${gn(sc[t])} przy xG ${fmt(r[12],2)}`,s:'skuteczność ponad jakość sytuacji',score:2+d+bonus,q:'Skuteczność czy szczęście? 👇',over:{sub:`${nm} strzelił ${gn(sc[t])} przy xG ${fmt(r[12],2)} – wykorzystał więcej, niż dały mu sytuacje.`}});
+      if(d<=-1)out.push({h:`${nm}: tylko ${gn(sc[t])} przy xG ${fmt(r[12],2)}`,s:'zmarnowane sytuacje',score:2+Math.abs(d)+bonus,q:'Pech czy brak skuteczności? 👇',over:{sub:`${nm} miał sytuacje na ${fmt(r[12],2)} xG, a strzelił tylko ${gn(sc[t])}.`}});}
+    if(o[3]!=null&&r[3]>=o[3]*1.4&&r[3]-o[3]>=5&&res!=='W')out.push({h:`${nm}: ${r[3]} strzałów (${on}: ${o[3]}), a ${res==='R'?'remis':'porażka'}`,s:'przewaga bez zwycięstwa',score:3.5+bonus,q:'Czego zabrakło w ostatniej fazie? 👇',over:{sub:`${nm} oddał ${r[3]} strzałów (${on}: ${o[3]}), a ${res==='R'?'zremisował':'przegrał'}.`}});
+    if(r[12]!=null&&o[12]!=null&&r[12]-o[12]>=.8&&res!=='W')out.push({h:`${nm}: xG ${fmt(r[12],2)} kontra ${fmt(o[12],2)}, a ${res==='R'?'remis':'porażka'}`,s:'wynik wbrew liczbom',score:3+bonus,q:'Czy wynik oddaje przebieg meczu? 👇',over:{sub:`Według xG lepszy był ${nm} (${fmt(r[12],2)} do ${fmt(o[12],2)}), ale ${res==='R'?'mecz zakończył się remisem':'przegrał'}.`}});
+    if(r[12]!=null&&o[12]!=null&&o[12]-r[12]>=.8&&res==='W')out.push({h:`${nm} wygrał mimo xG ${fmt(r[12],2)} kontra ${fmt(o[12],2)}`,s:'wygrana wbrew liczbom',score:3+bonus,q:'Zasłużona wygrana czy łut szczęścia? 👇',over:{sub:`${nm} wygrał, choć w jakości sytuacji przegrywał z ${on} (xG ${fmt(r[12],2)} do ${fmt(o[12],2)}).`}});
+    [[3,'strzałów'],[12,'xG'],[5,'rzutów rożnych']].forEach(([idx,lab])=>{
+      if(r[idx]==null)return;const q=rk(idx,r[idx]);
+      if(q<=3){const v=idx===12?fmt(r[idx],2):r[idx];out.push({h:`${nm}: ${v} ${lab} – #${q} wynik w sezonie`,s:'rekord w lidze po '+lastRound+' kolejkach',score:5-q+bonus,q:'Czy ta przewaga musi się opłacić? 👇',over:{sub:`${nm}: ${v} ${lab} – ${q===1?'najwięcej w całym sezonie':'#'+q+' wynik w całym sezonie'} wśród wszystkich drużyn.`}})}
+    });
+    if(r[2]!=null&&r[2]>=62&&res!=='W')out.push({h:`${nm}: ${r[2]}% posiadania, ale ${res==='R'?'remis':'porażka'}`,s:'posiadanie bez efektu',score:2.5+bonus,q:'Posiadanie piłki to siła czy pułapka? 👇',over:{sub:`${nm} miał ${r[2]}% posiadania piłki, ale ${res==='R'?'zremisował':'przegrał'}.`}});
+    const av=AG[t].avg.shots;if(isFinite(av)&&r[3]>=av*1.4&&r[3]-av>=4)out.push({h:`${nm}: ${r[3]} strzałów – średnio ${fmt(av,1)}`,s:'ponad swoją normę',score:2+bonus,q:'Skąd ta nagła przewaga? 👇',over:{sub:`${nm} oddał ${r[3]} strzałów, a zwykle strzela ${fmt(av,1)} na mecz.`}});
+  });
+  // przebieg bramek
+  let sh=0,sa=0,lead=null,leadMax={[h]:0,[a]:0};
+  gl.forEach(g=>{if(g[2]===h)sh++;else sa++;leadMax[h]=Math.max(leadMax[h],sh-sa);leadMax[a]=Math.max(leadMax[a],sa-sh)});
+  [h,a].forEach(t=>{const res=sc[t]>sc[opp[t]]?'W':sc[t]<sc[opp[t]]?'P':'R';
+    if(leadMax[t]>=1&&res!=='W')out.push({h:`${sn(t)} prowadził, ale ${res==='R'?'zremisował':'przegrał'}`,s:'stracone prowadzenie',score:3+(t===WID?1:0),q:'Co poszło nie tak po objęciu prowadzenia? 👇',over:{sub:`${sn(t)} prowadził w tym meczu, a skończył ${res==='R'?'remisem':'porażką'} ${sc[t]}:${sc[opp[t]]}.`}});
+    if(leadMax[opp[t]]>=1&&res==='W')out.push({h:`${sn(t)} odrobił straty i wygrał`,s:'wygrana po pościgu',score:3.5+(t===WID?1:0),q:'Co zmieniło się w drugiej połowie? 👇',over:{sub:`${sn(t)} przegrywał, a wygrał ${sc[t]}:${sc[opp[t]]}.`}});});
+  const late=gl.filter(g=>g[1]>=80);
+  if(late.length)out.push({h:`${late.length>1?'Gole':'Gol'} w końcówce: ${late.map(g=>g[3]+' '+g[1]+"'").join(', ')}`,s:'po 80. minucie',score:2+late.length,q:'Co dała ta końcówka? 👇',over:{sub:`${late.length>1?'Gole padły':'Gol padł'} po 80. minucie: ${late.map(g=>g[3]+' ('+sn(g[2])+', '+g[1]+"')").join(', ')}.`}});
+  const og=gl.filter(g=>g[5]==='O');
+  if(og.length)out.push({h:`Gol samobójczy: ${og[0][3]} (${og[0][1]}')`,s:'zmienił mecz',score:2.5,q:'Jak ten gol zmienił mecz? 👇',over:{sub:`Samobój ${og[0][3]} w ${og[0][1]}. minucie wpłynął na wynik ${f[5]}:${f[6]}.`}});
+  if(!out.length)out.push({h:'Bramki i liczby z meczu',s:'ogólny przegląd',score:0,q:'Co z tego meczu zostaje Wam w głowie? 👇',over:{}});
+  return out.sort((x,y)=>y.score-x.score).slice(0,8);
+}
+function playerInsights(pid,isSel){
+  const r=PI[pid];if(!r)return[];const out=[],nm=r[1],last=nm.split(' ').slice(-1)[0],tn=sn(r[2]),b=isSel?3:0;
+  ['goals','assists','keyp','rating','shots','mins','yellow','apps'].forEach(k=>{
+    const rk=prank(pid,k),v=r[PM[k].i];
+    if(rk&&rk<=3&&v>0)out.push({h:`${nm}: ${PM[k].dec?fmt(v,2)+' ('+PM[k].lab.toLowerCase()+')':v+' '+pl(v,PM[k].n)} – #${rk} w lidze`,s:tn,score:(4-rk)+b+((k==='goals'||k==='assists')?1:0),q:'Doceniacie go wystarczająco? 👇',
+      set:{pid,team:r[2],hero:k},over:{sub:`${tn}. #${rk} w lidze w kategorii „${PM[k].lab.toLowerCase()}” (${PM[k].dec?fmt(v,2):v}).`}})});
+  if(!out.length||isSel){
+    let best=null;['goals','assists','keyp','rating','shots'].forEach(k=>{const rk=prank(pid,k),v=r[PM[k].i];if(rk&&v>0&&rk<=12&&(!best||rk<best.rk))best={k,rk,v}});
+    if(best&&!out.some(x=>x.set.hero===best.k))out.push({h:`${nm}: ${PM[best.k].dec?fmt(best.v,2)+' ('+PM[best.k].lab.toLowerCase()+')':best.v+' '+pl(best.v,PM[best.k].n)} – #${best.rk} w lidze`,s:tn,score:1+b,q:'Doceniacie go wystarczająco? 👇',set:{pid,team:r[2],hero:best.k},over:{sub:`${tn}. #${best.rk} w lidze w kategorii „${PM[best.k].lab.toLowerCase()}” (${PM[best.k].dec?fmt(best.v,2):best.v}).`}});
+  }
+  if(r[6]>=250){
+    const pool=PL.filter(x=>x[6]>=250),p90=x=>x[8]/x[6]*90,v=p90(r),rk=1+pool.filter(x=>p90(x)>v).length;
+    if(r[8]>=2&&rk<=3)out.push({h:`${nm}: gol co ${Math.round(r[6]/r[8])} minut – #${rk} w lidze`,s:'skuteczność na 90 minut',score:(4-rk)+b+1,q:'Czy to piłkarz na dłużej? 👇',set:{pid,team:r[2],hero:'goals'},over:{sub:`${tn}. Średnio ${fmt(v,2)} gola na 90 minut – #${rk} w lidze (min. 250 minut).`}});
+  }
+  const gf=AG[r[2]].GF;
+  if(r[8]>=2&&gf>0&&r[8]/gf>=.2)out.push({h:`${nm}: ${r[8]} z ${gf} goli drużyny`,s:'udział w golach zespołu',score:2.5+b,q:'Co będzie, gdy go zabraknie? 👇',set:{pid,team:r[2],hero:'goals'},over:{sub:`${tn}. ${r[8]} z ${gf} goli zespołu strzelił ${nm} (${Math.round(r[8]/gf*100)}%).`}});
+  if(r[8]+r[9]>=3&&gf>0&&(r[8]+r[9])/gf>=.3)out.push({h:`${nm}: ${r[8]+r[9]} z ${gf} bramek zespołu (gole i asysty)`,s:'udział w bramkach zespołu',score:2.5+b,q:'Czy to dziś najważniejszy piłkarz zespołu? 👇',set:{pid,team:r[2],hero:'goals'},over:{sub:`${tn}. ${r[8]} ${pl(r[8],NOUN_G)} i ${r[9]} ${pl(r[9],PM.assists.n)} – udział w ${Math.round((r[8]+r[9])/gf*100)}% bramek zespołu.`}});
+  if(r[11]>=5&&r[8]>0){const c=r[8]/r[11];if(c>=.45||c<=.15)out.push({h:`${nm}: ${r[8]} goli z ${r[11]} celnych strzałów`,s:c>=.45?'bardzo skuteczny':'dużo strzałów, mało goli',score:2+b,q:c>=.45?'Skuteczność czy szczęście? 👇':'Co przeszkadza w skuteczności? 👇',set:{pid,team:r[2],hero:'shots'},over:{sub:`${tn}. ${r[8]} ${pl(r[8],NOUN_G)} z ${r[11]} strzałów celnych (${Math.round(c*100)}% skuteczności).`}})}
+  const full=AG[r[2]].P*90;if(r[6]>=full*.95&&AG[r[2]].P>=5)out.push({h:`${nm}: gra praktycznie każdą minutę`,s:`${r[6]} z ${full} możliwych minut`,score:2+b,q:'Czy jest niezastąpiony? 👇',set:{pid,team:r[2],hero:'mins'},over:{sub:`${tn}. ${r[6]} z ${full} możliwych minut na boisku.`}});
+  return out;
+}
+function playerSuggestions(p){
+  let out=playerInsights(p.pid,true);
+  PL.filter(r=>r[2]===+p.team&&r[0]!==p.pid).forEach(r=>{out=out.concat(playerInsights(r[0],false).filter(x=>x.score>=3.5))});
+  return out.sort((a,b)=>b.score-a.score).slice(0,8);
+}
+const CMLOW={ga:1,xga:1,fouls:1,yellow:1};
+function cmpSuggestions(a,b){
+  const A=sn(a),B=sn(b),ks=Object.keys(CM),rel=k=>{const m=CM[k],x=m.f(AG[a]),y=m.f(AG[b]);return (x-y)/(((x+y)/2)||1)};
+  const better=(k,who)=>{const d=rel(k);const aBetter=CMLOW[k]?d<0:d>0;return who==='a'?aBetter:!aBetter};
+  const pick=(arr)=>arr.filter(k=>CM[k]);
+  const out=[{h:'Największe różnice między drużynami',s:'6 wskaźników o największym rozjeździe',score:5,keys:cmpAuto(a,b),title:`${A} vs ${B}`,sub:`Średnie na mecz po ${lastRound} kolejkach. Gdzie te zespoły najbardziej się różnią.`,q:'Która z tych różnic zdecyduje o meczu? 👇'},
+    {h:'Atak: kto groźniejszy',s:'gole, xG, strzały, rożne',score:3,keys:pick(['gf','xg','shots','on','corners']),title:`${A} vs ${B}: atak`,sub:`Kto częściej strzela i stwarza sytuacje – średnie na mecz po ${lastRound} kolejkach.`,q:'Czyj atak bardziej Was przekonuje? 👇'},
+    {h:'Obrona: kto szczelniejszy',s:'gole stracone, xG rywali, faule, kartki',score:3,keys:pick(['ga','xga','fouls','yellow']),title:`${A} vs ${B}: obrona`,sub:`Kto traci mniej i jak gra bez piłki – średnie na mecz po ${lastRound} kolejkach.`,q:'Czyja defensywa jest pewniejsza? 👇'},
+    {h:'Styl gry: posiadanie i kontrola',s:'posiadanie, celność podań, strzały, rożne',score:3,keys:pick(['poss','pct','shots','corners']),title:`${A} vs ${B}: styl gry`,sub:`Dwa różne sposoby na grę – średnie na mecz po ${lastRound} kolejkach.`,q:'Który styl jest bardziej opłacalny? 👇'},
+    {h:'Wynik kontra jakość sytuacji',s:'punkty, gole, xG: kto ma nadwyżkę, kto pecha',score:3.5,keys:pick(['pts','gf','xg','ga','xga']),title:`${A} vs ${B}: wynik i xG`,sub:`Czy wyniki idą w parze z jakością sytuacji? Średnie na mecz po ${lastRound} kolejkach.`,q:'Kto ma szczęście, a kto pecha? 👇'}];
+  const wa=ks.filter(k=>better(k,'a')).sort((x,y)=>Math.abs(rel(y))-Math.abs(rel(x))).slice(0,5);
+  const wb=ks.filter(k=>better(k,'b')).sort((x,y)=>Math.abs(rel(y))-Math.abs(rel(x))).slice(0,5);
+  if(wa.length>=3)out.push({h:`Gdzie wygrywa ${A}`,s:`${wa.length} wskaźników na korzyść ${A}`,score:4,keys:wa,title:`${A} vs ${B}: gdzie wygrywa ${A}`,sub:`Wskaźniki, w których ${A} jest wyraźnie lepszy od rywala – średnie na mecz po ${lastRound} kolejkach.`,q:'Czy to wystarczy w tym meczu? 👇'});
+  if(wb.length>=3)out.push({h:`Gdzie wygrywa ${B}`,s:`${wb.length} wskaźników na korzyść ${B}`,score:4,keys:wb,title:`${A} vs ${B}: gdzie wygrywa ${B}`,sub:`Wskaźniki, w których ${B} jest wyraźnie lepszy od rywala – średnie na mecz po ${lastRound} kolejkach.`,q:'Czy to wystarczy w tym meczu? 👇'});
+  return out.map(o=>({h:o.h,s:o.s,score:o.score,q:o.q,set:{keys:o.keys.slice(0,7)},over:{title:o.title,sub:o.sub}})).sort((x,y)=>y.score-x.score);
+}
+
 const fact={
   name:'Własna liczba',
   init(){const p={big:'6',label:'remisów Widzewa po 9 kolejkach',l1:'Najwięcej w lidze',l2:'',tag:'Liczba',foot:defFoot()};return p},
@@ -655,7 +795,7 @@ const fact={
     s+='</g>';
     return shell(s+footerV(p),bg);
   },
-  post(p){return `${p.big} – ${p.label}.\n\n${[p.l1,p.l2].filter(Boolean).join(' ')}\n\n#RTSstat #Widzew`}
+  post(p){return `${p.big} – ${p.label}.\n\n${[p.l1,p.l2].filter(Boolean).join(' ')}${p.q?'\n\n'+p.q:''}\n\n#RTSstat #Widzew`}
 };
 
 const TYPES={rival,match:matchT,player,cmp,fact};
@@ -705,8 +845,8 @@ function buildCtl(){
   if(sg.length){
     c.appendChild(el(`<div class="sec">Podpowiedzi</div>`));
     const w=el(`<div class="chips"></div>`);
-    sg.slice(0,S.type==='fact'?40:6).forEach(x=>{const b=el(`<button class="chip">${esc(x.h)}<small>${esc(x.s||'')}</small></button>`);
-      b.onclick=()=>{Object.assign(p,x.set);if(S.type==='fact'){p.ed={}}else{p.ed={}}Ty.auto(p,true);S.postEd=false;buildCtl();refresh(true)};w.appendChild(b)});
+    sg.slice(0,S.type==='fact'?40:8).forEach(x=>{const b=el(`<button class="chip">${esc(x.h)}<small>${esc(x.s||'')}</small></button>`);
+      b.onclick=()=>{p.q=x.q||'';Object.assign(p,x.set||{});p.ed={};Ty.auto(p,true);if(x.over){Object.assign(p,x.over);for(const k in x.over)p.ed[k]=true}S.postEd=false;buildCtl();refresh(true)};w.appendChild(b)});
     if(S.type==='fact'){w.style.maxHeight='280px';w.style.overflowY='auto'}
     c.appendChild(w);
   }
@@ -723,6 +863,7 @@ function buildCtl(){
     else if(f.t==='sel'){inp.onchange=()=>{p[f.k]=f.num?+inp.value:inp.value;
       if(f.k==='team'){const o=plOpts(p.team);p.pid=o[0]?o[0][0]:p.pid}
       if(S.type==='cmp'&&(f.k==='a'||f.k==='b'))p.keys=cmpAuto(p.a,p.b);
+      if(['a','b','fid','pid','key','n','team'].includes(f.k)){p.ed={};p.q=''}
       Ty.auto(p,false);S.postEd=false;if(f.dep||f.k==='a'||f.k==='b'||f.k==='fid'||f.k==='pid'||f.k==='key'||f.k==='n')buildCtl();refresh(true)}}
     else{inp.oninput=()=>{p[f.k]=inp.value;p.ed=p.ed||{};p.ed[f.k]=true;refresh()}}
   });

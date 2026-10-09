@@ -193,7 +193,7 @@ function shell(inner,bg){
 }
 function header(p){
   let s='';const x=104,maxW=1290;
-  s+=`<rect x="${x}" y="88" width="40" height="6" fill="#fff"/>`+tx(x+54,98,'#RTSstat · '+(p.tag||''),{size:26,fam:'BC',w:800,ls:4,up:true});
+  s+=`<rect x="${x}" y="88" width="40" height="6" fill="#fff"/>`+tx(x+54,98,'#RTSstat · '+(p.tag||''),{size:30,fam:'BC',w:800,ls:4,up:true});
   const title=String(p.title||'').toUpperCase();
   let size=96,lines=[title];
   while(size>60&&mw(title,size,'BC',800)>maxW)size-=4;
@@ -201,23 +201,23 @@ function header(p){
   let y=200;
   lines.forEach((l,i)=>{s+=tx(x,y+i*size*.95,l,{size,fam:'BC',w:800,ls:1})});
   y=y+(lines.length-1)*size*.95;
-  const sub=wrap(p.sub||'',maxW,32,'BA',400).slice(0,2);
-  let sy=y+52;sub.forEach((l,i)=>{s+=tx(x,sy+i*42,l,{size:32,fam:'BA',w:400,fill:'#fff1f1'})});
-  let by=sub.length?sy+(sub.length-1)*42:y;
+  const sub=wrap(p.sub||'',maxW,36,'BA',400).slice(0,2);
+  let sy=y+56;sub.forEach((l,i)=>{s+=tx(x,sy+i*46,l,{size:36,fam:'BA',w:400,fill:'#fff1f1'})});
+  let by=sub.length?sy+(sub.length-1)*46:y;
   if(p.date1||p.date2){
-    const w1=p.date1?mw(String(p.date1).toUpperCase(),28,'BC',800,3):0,w2=p.date2?mw(p.date2,24,'BA',600):0;
+    const w1=p.date1?mw(String(p.date1).toUpperCase(),32,'BC',800,3):0,w2=p.date2?mw(p.date2,28,'BA',600):0;
     const W=18*2+w1+(p.date1&&p.date2?14:0)+w2,top=by+24;
-    s+=`<rect x="${x}" y="${top}" width="${W}" height="54" rx="6" fill="rgba(0,0,0,.3)" stroke="#fff" stroke-width="3"/>`;
+    s+=`<rect x="${x}" y="${top}" width="${W}" height="60" rx="6" fill="rgba(0,0,0,.3)" stroke="#fff" stroke-width="3"/>`;
     let cx=x+18;
-    if(p.date1){s+=tx(cx,top+37,p.date1,{size:28,fam:'BC',w:800,ls:3,up:true});cx+=w1+14}
-    if(p.date2)s+=tx(cx,top+36,p.date2,{size:24,fam:'BA',w:600,fill:C.pale});
-    by=top+54;
+    if(p.date1){s+=tx(cx,top+42,p.date1,{size:32,fam:'BC',w:800,ls:3,up:true});cx+=w1+14}
+    if(p.date2)s+=tx(cx,top+41,p.date2,{size:28,fam:'BA',w:600,fill:C.pale});
+    by=top+60;
   }
   return {svg:`<g filter="url(#sh)">${s}</g>`,bottom:by};
 }
 function headerV(p){
   let s='';const x=80,maxW=920;
-  s+=`<rect x="${x}" y="276" width="40" height="6" fill="#fff"/>`+tx(x+54,286,'#RTSstat · '+(p.tag||''),{size:24,fam:'BC',w:800,ls:4,up:true});
+  s+=`<rect x="${x}" y="276" width="40" height="6" fill="#fff"/>`+tx(x+54,288,'#RTSstat · '+(p.tag||''),{size:28,fam:'BC',w:800,ls:4,up:true});
   const title=String(p.title||'').toUpperCase();
   let size=88,lines=wrap(title,maxW,size,'BC',800);
   while(lines.length>2&&size>56){size-=4;lines=wrap(title,maxW,size,'BC',800)}
@@ -225,22 +225,22 @@ function headerV(p){
   let y=282+size*.95;
   lines.forEach((l,i)=>{s+=tx(x,y+i*size*.95,l,{size,fam:'BC',w:800,ls:1})});
   y=y+(lines.length-1)*size*.95;
-  const sub=wrap(p.sub||'',maxW,30,'BA',400).slice(0,3);
-  let sy=y+46;sub.forEach((l,i)=>{s+=tx(x,sy+i*40,l,{size:30,fam:'BA',w:400,fill:'#fff1f1'})});
-  let by=sub.length?sy+(sub.length-1)*40:y;
+  const sub=wrap(p.sub||'',maxW,34,'BA',400).slice(0,3);
+  let sy=y+50;sub.forEach((l,i)=>{s+=tx(x,sy+i*44,l,{size:34,fam:'BA',w:400,fill:'#fff1f1'})});
+  let by=sub.length?sy+(sub.length-1)*44:y;
   if(p.date1||p.date2){
-    const w1=p.date1?mw(String(p.date1).toUpperCase(),26,'BC',800,3):0,w2=p.date2?mw(p.date2,22,'BA',600):0;
+    const w1=p.date1?mw(String(p.date1).toUpperCase(),30,'BC',800,3):0,w2=p.date2?mw(p.date2,26,'BA',600):0;
     const W=18*2+w1+(p.date1&&p.date2?14:0)+w2,top=by+22;
-    s+=`<rect x="${x}" y="${top}" width="${W}" height="50" rx="6" fill="rgba(0,0,0,.3)" stroke="#fff" stroke-width="3"/>`;
+    s+=`<rect x="${x}" y="${top}" width="${W}" height="56" rx="6" fill="rgba(0,0,0,.3)" stroke="#fff" stroke-width="3"/>`;
     let cx=x+18;
-    if(p.date1){s+=tx(cx,top+34,p.date1,{size:26,fam:'BC',w:800,ls:3,up:true});cx+=w1+14}
-    if(p.date2)s+=tx(cx,top+33,p.date2,{size:22,fam:'BA',w:600,fill:C.pale});
-    by=top+50;
+    if(p.date1){s+=tx(cx,top+38,p.date1,{size:30,fam:'BC',w:800,ls:3,up:true});cx+=w1+14}
+    if(p.date2)s+=tx(cx,top+37,p.date2,{size:26,fam:'BA',w:600,fill:C.pale});
+    by=top+56;
   }
   return {svg:`<g filter="url(#sh)">${s}</g>`,bottom:by};
 }
-function footerV(p){const L=wrap(p.foot||'',920,18,'BA',400).slice(0,2);return `<g filter="url(#sh)">`+L.map((l,i)=>tx(80,1262+i*24,l,{size:18,fam:'BA',w:400,fill:'#e9cfd0'})).join('')+`</g>`}
-function footer(p){return `<g filter="url(#sh)">${tx(104,1000,p.foot||'',{size:20,fam:'BA',w:400,fill:'#e9cfd0'})}</g>`}
+function footerV(p){const L=wrap(p.foot||'',920,20,'BA',400).slice(0,2);return `<g filter="url(#sh)">`+L.map((l,i)=>tx(80,1260+i*26,l,{size:20,fam:'BA',w:400,fill:'#e9cfd0'})).join('')+`</g>`}
+function footer(p){return `<g filter="url(#sh)">${tx(104,1002,p.foot||'',{size:22,fam:'BA',w:400,fill:'#e9cfd0'})}</g>`}
 function defFoot(extra){return `#RTSstat · stan po ${lastRound}. kolejce Ekstraklasy ${D.meta.season} · dane: API-Football`+(extra?' · '+extra:'')}
 
 /* --- rival --- */
@@ -298,18 +298,18 @@ const rival={
   svg(p,bg){if(isV())return this.svgV(p,bg);
     const H=header(p);let s=H.svg;
     const R=RM[p.key];const y0=H.bottom+24,bottomY=972;
-    const legendH=40,avail=bottomY-y0-legendH;
-    const rowGap=14,hdH=96;
+    const legendH=44,avail=bottomY-y0-legendH;
+    const rowGap=14,hdH=104;
     const tilesH=Math.max(96,Math.min(162,(avail-2*hdH-rowGap-16)/2));
     const rowH=hdH+8+tilesH;
     const total=2*rowH+rowGap+legendH;
     let y=bottomY-total;
     [[p.a,true],[p.b,false]].forEach(([t,me])=>{
       const ms=rivalMatches(t,p.n),c=ms.filter(R.hit).length;
-      const big=String(c),bw=Math.max(80,mw(big,112,'BC',800));
-      s+=`<g filter="url(#sh)">`+tx(104,y+88,big,{size:112,fam:'BC',w:800})+
-        flag(104+bw+22,y+14,16,44,t)+tx(104+bw+22+30,y+50,sn(t),{size:52,fam:'BC',w:800,ls:1,up:true})+
-        tx(104+bw+22,y+88,`${pl(c,R.n)} w ${ms.length} ${ms.length===1?'meczu':'meczach'}`,{size:26,fam:'BC',w:800,ls:3,up:true,fill:C.pale})+`</g>`;
+      const big=String(c),bw=Math.max(80,mw(big,124,'BC',800));
+      s+=`<g filter="url(#sh)">`+tx(104,y+92,big,{size:124,fam:'BC',w:800})+
+        flag(104+bw+22,y+14,16,44,t)+tx(104+bw+22+30,y+52,sn(t),{size:58,fam:'BC',w:800,ls:1,up:true})+
+        tx(104+bw+22,y+92,`${pl(c,R.n)} w ${ms.length} ${ms.length===1?'meczu':'meczach'}`,{size:30,fam:'BC',w:800,ls:3,up:true,fill:C.pale})+`</g>`;
       const n=ms.length||1,gap=12,w=(1712-gap*(n-1))/n,ty=y+hdH+8;
       ms.forEach((m,i)=>{
         const x=104+i*(w+gap),hit=R.hit(m);
@@ -318,10 +318,10 @@ const rival={
         else{fill=C.tileDark;stroke='#cfcfd2';sw=3;ink='#e8e8ea'}
         s+=`<rect x="${x+sw/2}" y="${ty+sw/2}" width="${w-sw}" height="${tilesH-sw}" rx="10" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
         s+=band(x+sw/2+8,ty+tilesH-14,w-sw-16,7,m.opp,hit);
-        s+=tx(x+w/2,ty+tilesH*.22,'K'+m.k,{size:24,fam:'BA',w:600,fill:ink,anchor:'middle',ls:1,op:.9});
-        let on=sn(m.opp).toUpperCase(),os=28;while(os>16&&mw(on,os,'BC',800)>w-14)os-=2;
-        s+=tx(x+w/2,ty+tilesH*.22+os+8,on,{size:os,fam:'BC',w:800,fill:ink,anchor:'middle'});
-        s+=tx(x+w/2,ty+tilesH-22,`${m.gf}:${m.ga}`,{size:Math.min(66,tilesH*.42),fam:'BC',w:800,fill:ink,anchor:'middle'});
+        s+=tx(x+w/2,ty+tilesH*.22,'K'+m.k,{size:28,fam:'BA',w:600,fill:ink,anchor:'middle',ls:1,op:.9});
+        let on=sn(m.opp).toUpperCase(),os=32;while(os>16&&mw(on,os,'BC',800)>w-14)os-=2;
+        s+=tx(x+w/2,ty+tilesH*.22+os+10,on,{size:os,fam:'BC',w:800,fill:ink,anchor:'middle'});
+        s+=tx(x+w/2,ty+tilesH-22,`${m.gf}:${m.ga}`,{size:Math.min(78,tilesH*.48),fam:'BC',w:800,fill:ink,anchor:'middle'});
       });
       y+=rowH+rowGap;
     });
@@ -329,14 +329,14 @@ const rival={
     const ly=bottomY-10;let lx=104;
     const sw=(f,st)=>{const r=`<rect x="${lx}" y="${ly-18}" width="22" height="22" rx="4" fill="${f}" ${st?`stroke="${st}" stroke-width="3"`:''}/>`;lx+=32;return r};
     s+=`<g filter="url(#sh)">`;
-    s+=sw('#F7F4F0')+tx(lx,ly,R.legend,{size:22,fam:'BA',w:600,fill:'#f1dede'});lx+=mw(R.legend,22,'BA',600)+30;
-    s+=sw('rgba(10,6,8,.72)','#cfcfd2')+tx(lx,ly,'pozostałe',{size:22,fam:'BA',w:600,fill:'#f1dede'});lx+=mw('pozostałe',22,'BA',600)+30;
-    s+=tx(lx,ly,'w kafelku: kolejka · rywal · wynik · pasek = barwy rywala',{size:22,fam:'BA',w:600,fill:'#f1dede'})+`</g>`;
+    s+=sw('#F7F4F0')+tx(lx,ly,R.legend,{size:24,fam:'BA',w:600,fill:'#f1dede'});lx+=mw(R.legend,24,'BA',600)+30;
+    s+=sw('rgba(10,6,8,.72)','#cfcfd2')+tx(lx,ly,'pozostałe',{size:24,fam:'BA',w:600,fill:'#f1dede'});lx+=mw('pozostałe',24,'BA',600)+30;
+    s+=tx(lx,ly,'w kafelku: kolejka · rywal · wynik · pasek = barwy rywala',{size:24,fam:'BA',w:600,fill:'#f1dede'})+`</g>`;
     return shell(s+footer(p),bg);
   },
   svgV(p,bg){
     const H=headerV(p);let s=H.svg;const R=RM[p.key];
-    const X0=80,CW=920,bottomY=1226,cols=5,gap=10,rowGap=12,legendH=34,hdH=78;
+    const X0=80,CW=920,bottomY=1226,cols=5,gap=10,rowGap=12,legendH=36,hdH=82;
     const y0=H.bottom+26;
     const n1=rivalMatches(p.a,p.n).length,n2=rivalMatches(p.b,p.n).length;
     const rows=Math.max(1,Math.ceil(Math.max(n1,n2)/cols));
@@ -346,10 +346,10 @@ const rival={
     let y=Math.max(y0,bottomY-total);
     [[p.a],[p.b]].forEach(([t])=>{
       const ms=rivalMatches(t,p.n),c=ms.filter(R.hit).length;
-      const big=String(c),bw=Math.max(60,mw(big,84,'BC',800));
-      s+=`<g filter="url(#sh)">`+tx(X0,y+66,big,{size:84,fam:'BC',w:800})+
-        flag(X0+bw+20,y+10,14,38,t)+tx(X0+bw+20+26,y+42,sn(t),{size:44,fam:'BC',w:800,ls:1,up:true})+
-        tx(X0+bw+20,y+70,`${pl(c,R.n)} w ${ms.length} ${ms.length===1?'meczu':'meczach'}`,{size:21,fam:'BC',w:800,ls:3,up:true,fill:C.pale})+`</g>`;
+      const big=String(c),bw=Math.max(60,mw(big,92,'BC',800));
+      s+=`<g filter="url(#sh)">`+tx(X0,y+70,big,{size:92,fam:'BC',w:800})+
+        flag(X0+bw+20,y+10,14,38,t)+tx(X0+bw+20+26,y+44,sn(t),{size:50,fam:'BC',w:800,ls:1,up:true})+
+        tx(X0+bw+20,y+72,`${pl(c,R.n)} w ${ms.length} ${ms.length===1?'meczu':'meczach'}`,{size:24,fam:'BC',w:800,ls:3,up:true,fill:C.pale})+`</g>`;
       const w=(CW-gap*(cols-1))/cols;
       ms.forEach((m,i)=>{
         const x=X0+(i%cols)*(w+gap),ty=y+hdH+6+Math.floor(i/cols)*(th+gap),hit=R.hit(m);
@@ -357,17 +357,17 @@ const rival={
         if(hit){fill='#F7F4F0';ink=C.dark}else{fill=C.tileDark;stroke='#cfcfd2';sw=3;ink='#e8e8ea'}
         s+=`<rect x="${x+sw/2}" y="${ty+sw/2}" width="${w-sw}" height="${th-sw}" rx="9" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
         s+=band(x+sw/2+7,ty+th-12,w-sw-14,6,m.opp,hit);
-        const lab=`K${m.k} ${sn(m.opp)}`.toUpperCase();let os=22;while(os>13&&mw(lab,os,'BC',800)>w-12)os-=1;
+        const lab=`K${m.k} ${sn(m.opp)}`.toUpperCase();let os=25;while(os>13&&mw(lab,os,'BC',800)>w-10)os-=1;
         s+=tx(x+w/2,ty+th*.3,lab,{size:os,fam:'BC',w:800,fill:ink,anchor:'middle'});
-        s+=tx(x+w/2,ty+th-20,`${m.gf}:${m.ga}`,{size:Math.min(48,th*.46),fam:'BC',w:800,fill:ink,anchor:'middle'});
+        s+=tx(x+w/2,ty+th-20,`${m.gf}:${m.ga}`,{size:Math.min(56,th*.5),fam:'BC',w:800,fill:ink,anchor:'middle'});
       });
       y+=blockH+rowGap;
     });
     const ly=bottomY-6;let lx=X0;
     const sw2=(f,st)=>{const r=`<rect x="${lx}" y="${ly-16}" width="20" height="20" rx="4" fill="${f}" ${st?`stroke="${st}" stroke-width="3"`:''}/>`;lx+=28;return r};
-    s+=`<g filter="url(#sh)">`+sw2('#F7F4F0')+tx(lx,ly,R.legend,{size:20,fam:'BA',w:600,fill:'#f1dede'});lx+=mw(R.legend,20,'BA',600)+24;
-    s+=sw2('rgba(10,6,8,.72)','#cfcfd2')+tx(lx,ly,'pozostałe',{size:20,fam:'BA',w:600,fill:'#f1dede'});lx+=mw('pozostałe',20,'BA',600)+24;
-    s+=tx(lx,ly,'pasek = barwy rywala',{size:20,fam:'BA',w:600,fill:'#f1dede'})+`</g>`;
+    s+=`<g filter="url(#sh)">`+sw2('#F7F4F0')+tx(lx,ly,R.legend,{size:22,fam:'BA',w:600,fill:'#f1dede'});lx+=mw(R.legend,22,'BA',600)+24;
+    s+=sw2('rgba(10,6,8,.72)','#cfcfd2')+tx(lx,ly,'pozostałe',{size:22,fam:'BA',w:600,fill:'#f1dede'});lx+=mw('pozostałe',22,'BA',600)+24;
+    s+=tx(lx,ly,'pasek = barwy rywala',{size:22,fam:'BA',w:600,fill:'#f1dede'})+`</g>`;
     return shell(s+footerV(p),bg);
   },
   post(p){return `${p.title}.\n\n${p.sub}\n${p.date1?p.date1+' · '+p.date2+'\n':''}\nA Wy co typujecie? 👇\n#RTSstat #Widzew`}
@@ -395,18 +395,18 @@ const matchT={
     const col=t=>gl.filter(g=>g[2]===t);
     const y0=H.bottom+34;
     const stats=[['Posiadanie piłki','poss','%'],['Strzały (celne)','shots'],['Rzuty rożne','corners'],['xG (gole oczekiwane)','xg']];
-    const sh=stats.length*58+10,sy=972-sh;
+    const sh=stats.length*66+10,sy=972-sh;
     // kolumny bramek
     const cx=[104,980];const cw=836;
     [[h,0],[a,1]].forEach(([t,i])=>{
       const x=cx[i];
-      s+=`<g filter="url(#sh)">`+tx(x,y0+26,sn(t),{size:44,fam:'BC',w:800,ls:2,up:true,fill:i?'#fff':C.pale})+`</g>`;
-      const g=col(t),lh=Math.min(48,Math.max(34,(sy-y0-70)/Math.max(g.length,1)));
+      s+=`<g filter="url(#sh)">`+tx(x,y0+28,sn(t),{size:52,fam:'BC',w:800,ls:2,up:true,fill:i?'#fff':C.pale})+`</g>`;
+      const g=col(t),lh=Math.min(56,Math.max(40,(sy-y0-70)/Math.max(g.length,1)));
       g.forEach((e,j)=>{
         const yy=y0+78+j*lh;let lab=e[3].replace(/^([A-ZŁŚŻŹĆÓ]\.\s?)+/,m=>m);
         const extra=e[5]==='P'?' (k)':e[5]==='O'?' (sam.)':'';
-        s+=`<g filter="url(#sh)">`+tx(x,yy,e[1]+"'",{size:30,fam:'BC',w:800,fill:C.pale,ls:1})+tx(x+74,yy,lab+extra,{size:32,fam:'BA',w:600});
-        if(e[4])s+=tx(x+74+mw(lab+extra,32,'BA',600)+14,yy,'as. '+e[4],{size:24,fam:'BA',w:400,fill:'#f1dede'});
+        s+=`<g filter="url(#sh)">`+tx(x,yy,e[1]+"'",{size:34,fam:'BC',w:800,fill:C.pale,ls:1})+tx(x+82,yy,lab+extra,{size:38,fam:'BA',w:600});
+        if(e[4])s+=tx(x+82+mw(lab+extra,38,'BA',600)+14,yy,'as. '+e[4],{size:28,fam:'BA',w:400,fill:'#f1dede'});
         s+=`</g>`;
       });
       if(!g.length)s+=`<g filter="url(#sh)">`+tx(x,y0+78,'bez bramek',{size:28,fam:'BA',w:400,fill:'#f1dede'})+`</g>`;
@@ -416,12 +416,12 @@ const matchT={
       const ra=ts[f[0]+'_'+h],rb=ts[f[0]+'_'+a];if(!ra||!rb)return;
       const idx={poss:2,shots:3,corners:5,xg:12}[k];
       let va=+ra[idx]||0,vb=+rb[idx]||0;
-      const yy=sy+j*58+36,mxv=Math.max(va,vb,0.01);
+      const yy=sy+j*66+42,mxv=Math.max(va,vb,0.01);
       const wa=300*va/mxv,wb=300*vb/mxv;
       const f1=v=>k==='xg'?fmt(v,2):String(v)+(u||'');
       const t1=k==='shots'?`${va} (${ra[4]??0})`:f1(va),t2=k==='shots'?`${vb} (${rb[4]??0})`:f1(vb);
-      s+=`<g filter="url(#sh)">`+tx(104,yy,t1,{size:38,fam:'BC',w:800})+tx(1816,yy,t2,{size:38,fam:'BC',w:800,anchor:'end'})+
-        tx(960,yy-4,lab,{size:24,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
+      s+=`<g filter="url(#sh)">`+tx(104,yy,t1,{size:46,fam:'BC',w:800})+tx(1816,yy,t2,{size:46,fam:'BC',w:800,anchor:'end'})+
+        tx(960,yy-4,lab,{size:28,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
       s+=`<rect x="${950-wa-10}" y="${yy+8}" width="${wa}" height="10" rx="5" fill="${barCol(h)}" stroke="#fff" stroke-width="1.5"/><rect x="970" y="${yy+8}" width="${wb}" height="10" rx="5" fill="${barCol(a)}" stroke="#fff" stroke-width="1.5"/>`;
     });
     // pasek terminu
@@ -434,18 +434,18 @@ const matchT={
     const col=t=>gl.filter(g=>g[2]===t);
     const y0=H.bottom+34;
     const stats=[['Posiadanie piłki','poss','%'],['Strzały (celne)','shots'],['Rzuty rożne','corners'],['xG (gole oczekiwane)','xg']];
-    const rhs=66,sh=stats.length*rhs,sy=1226-sh;
+    const rhs=74,sh=stats.length*rhs,sy=1226-sh;
     const cx=[80,560],mg=Math.max(col(h).length,col(a).length,1);
-    const lh=Math.min(66,Math.max(44,(sy-y0-80)/mg));
+    const lh=Math.min(74,Math.max(50,(sy-y0-80)/mg));
     [[h,0],[a,1]].forEach(([t,i])=>{
       const x=cx[i];
-      s+=`<g filter="url(#sh)">`+tx(x,y0+26,sn(t),{size:38,fam:'BC',w:800,ls:2,up:true,fill:i?'#fff':C.pale})+`</g>`;
+      s+=`<g filter="url(#sh)">`+tx(x,y0+28,sn(t),{size:44,fam:'BC',w:800,ls:2,up:true,fill:i?'#fff':C.pale})+`</g>`;
       const g=col(t);
       g.forEach((e,j)=>{
         const yy=y0+74+j*lh;
         const extra=e[5]==='P'?' (k)':e[5]==='O'?' (sam.)':'';
-        s+=`<g filter="url(#sh)">`+tx(x,yy,e[1]+"'",{size:26,fam:'BC',w:800,fill:C.pale,ls:1})+tx(x+58,yy,e[3]+extra,{size:28,fam:'BA',w:600});
-        if(e[4])s+=tx(x+58,yy+24,'as. '+e[4],{size:20,fam:'BA',w:400,fill:'#f1dede'});
+        s+=`<g filter="url(#sh)">`+tx(x,yy,e[1]+"'",{size:30,fam:'BC',w:800,fill:C.pale,ls:1})+tx(x+64,yy,e[3]+extra,{size:32,fam:'BA',w:600});
+        if(e[4])s+=tx(x+64,yy+28,'as. '+e[4],{size:24,fam:'BA',w:400,fill:'#f1dede'});
         s+=`</g>`;
       });
       if(!g.length)s+=`<g filter="url(#sh)">`+tx(x,y0+74,'bez bramek',{size:26,fam:'BA',w:400,fill:'#f1dede'})+`</g>`;
@@ -454,12 +454,12 @@ const matchT={
       const ra=ts[f[0]+'_'+h],rb=ts[f[0]+'_'+a];if(!ra||!rb)return;
       const idx={poss:2,shots:3,corners:5,xg:12}[k];
       let va=+ra[idx]||0,vb=+rb[idx]||0;
-      const yy=sy+j*rhs+38,mxv=Math.max(va,vb,0.01);
-      const wa=290*va/mxv,wb=290*vb/mxv;
+      const yy=sy+j*rhs+44,mxv=Math.max(va,vb,0.01);
+      const wa=270*va/mxv,wb=270*vb/mxv;
       const f1=v=>k==='xg'?fmt(v,2):String(v)+(u||'');
       const t1=k==='shots'?`${va} (${ra[4]??0})`:f1(va),t2=k==='shots'?`${vb} (${rb[4]??0})`:f1(vb);
-      s+=`<g filter="url(#sh)">`+tx(80,yy,t1,{size:36,fam:'BC',w:800})+tx(1000,yy,t2,{size:36,fam:'BC',w:800,anchor:'end'})+
-        tx(540,yy-8,lab,{size:20,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
+      s+=`<g filter="url(#sh)">`+tx(80,yy,t1,{size:42,fam:'BC',w:800})+tx(1000,yy,t2,{size:42,fam:'BC',w:800,anchor:'end'})+
+        tx(540,yy-10,lab,{size:24,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
       s+=`<rect x="${530-wa}" y="${yy+2}" width="${wa}" height="9" rx="4.5" fill="${barCol(h)}" stroke="#fff" stroke-width="1.5"/><rect x="550" y="${yy+2}" width="${wb}" height="9" rx="4.5" fill="${barCol(a)}" stroke="#fff" stroke-width="1.5"/>`;
     });
     return shell(s+footerV(p),bg);
@@ -514,8 +514,8 @@ const player={
     s+=`<rect x="${hx}" y="${y0}" width="${hw}" height="${ah}" rx="12" fill="${C.tileDark}" stroke="#fff" stroke-width="3"/>`;
     const fs=Math.min(300,ah*.62);
     s+=tx(hx+hw/2,y0+ah*.58,hv,{size:fs,fam:'BC',w:800,anchor:'middle'});
-    s+=tx(hx+hw/2,y0+ah*.58+52,hm.lab,{size:42,fam:'BC',w:800,ls:4,up:true,anchor:'middle'});
-    const rk=prank(p.pid,hk);if(rk)s+=tx(hx+hw/2,y0+ah-26,`#${rk} w lidze`,{size:30,fam:'BA',w:600,anchor:'middle',fill:'#ffe5e6'});
+    s+=tx(hx+hw/2,y0+ah*.58+52,hm.lab,{size:48,fam:'BC',w:800,ls:4,up:true,anchor:'middle'});
+    const rk=prank(p.pid,hk);if(rk)s+=tx(hx+hw/2,y0+ah-26,`#${rk} w lidze`,{size:34,fam:'BA',w:600,anchor:'middle',fill:'#ffe5e6'});
     const order=['goals','assists','shots','keyp','mins','rating','apps','yellow'].filter(k=>k!==hk).slice(0,6);
     const gx=hx+hw+24,gw=1816-gx,cols=3,gap=16,cw=(gw-gap*2)/cols,chh=(ah-gap)/2;
     order.forEach((k,i)=>{
@@ -523,9 +523,9 @@ const player={
       const v=r[m.i];let vt=m.dec?fmt(v,2):String(v??'–');if(k==='shots')vt=`${r[10]} (${r[11]})`;
       const rr=['goals','assists','keyp','rating','shots'].includes(k)?prank(p.pid,k):null;
       s+=`<rect x="${x}" y="${y}" width="${cw}" height="${chh}" rx="10" fill="${C.tileDark}" stroke="#cfcfd2" stroke-width="3"/>`;
-      s+=tx(x+cw/2,y+chh*.62,vt,{size:Math.min(110,chh*.46),fam:'BC',w:800,anchor:'middle',fill:'#fff'});
-      s+=tx(x+cw/2,y+chh*.2+8,k==='shots'?'Strzały (celne)':m.lab,{size:24,fam:'BC',w:600,ls:3,up:true,anchor:'middle',fill:C.pale});
-      if(rr&&rr<=15)s+=tx(x+cw/2,y+chh-18,`#${rr} w lidze`,{size:22,fam:'BA',w:600,anchor:'middle',fill:'#e8e8ea'});
+      s+=tx(x+cw/2,y+chh*.62,vt,{size:Math.min(128,chh*.5),fam:'BC',w:800,anchor:'middle',fill:'#fff'});
+      s+=tx(x+cw/2,y+chh*.2+8,k==='shots'?'Strzały (celne)':m.lab,{size:28,fam:'BC',w:600,ls:3,up:true,anchor:'middle',fill:C.pale});
+      if(rr&&rr<=15)s+=tx(x+cw/2,y+chh-18,`#${rr} w lidze`,{size:26,fam:'BA',w:600,anchor:'middle',fill:'#e8e8ea'});
     });
     return shell(s+footer(p),bg);
   },
@@ -538,8 +538,8 @@ const player={
     s+=`<rect x="${hx}" y="${y0}" width="${hw}" height="${hh}" rx="12" fill="${C.tileDark}" stroke="#fff" stroke-width="3"/>`;
     const fs=Math.min(200,hh*.62);
     s+=tx(hx+hw/2,y0+hh*.62,hv,{size:fs,fam:'BC',w:800,anchor:'middle'});
-    s+=tx(hx+hw/2,y0+hh*.62+44,hm.lab,{size:34,fam:'BC',w:800,ls:4,up:true,anchor:'middle'});
-    const rk=prank(p.pid,hk);if(rk)s+=tx(hx+hw/2,y0+hh-20,`#${rk} w lidze`,{size:26,fam:'BA',w:600,anchor:'middle',fill:'#ffe5e6'});
+    s+=tx(hx+hw/2,y0+hh*.62+48,hm.lab,{size:40,fam:'BC',w:800,ls:4,up:true,anchor:'middle'});
+    const rk=prank(p.pid,hk);if(rk)s+=tx(hx+hw/2,y0+hh-20,`#${rk} w lidze`,{size:30,fam:'BA',w:600,anchor:'middle',fill:'#ffe5e6'});
     const order=['goals','assists','shots','keyp','mins','rating','apps','yellow'].filter(k=>k!==hk).slice(0,6);
     const gy=y0+hh+16,gap=14,cw=(hw-gap)/2,chh=(y1-gy-gap*2)/3;
     order.forEach((k,i)=>{
@@ -547,9 +547,9 @@ const player={
       const v=r[m.i];let vt=m.dec?fmt(v,2):String(v??'–');if(k==='shots')vt=`${r[10]} (${r[11]})`;
       const rr=['goals','assists','keyp','rating','shots'].includes(k)?prank(p.pid,k):null;
       s+=`<rect x="${x}" y="${y}" width="${cw}" height="${chh}" rx="10" fill="${C.tileDark}" stroke="#cfcfd2" stroke-width="3"/>`;
-      s+=tx(x+16,y+chh*.3,k==='shots'?'Strzały (celne)':m.lab,{size:22,fam:'BC',w:600,ls:3,up:true,fill:C.pale});
-      if(rr&&rr<=15)s+=tx(x+cw-16,y+chh*.3,`#${rr} w lidze`,{size:20,fam:'BA',w:600,anchor:'end',fill:'#e8e8ea'});
-      s+=tx(x+cw/2,y+chh*.8,vt,{size:Math.min(70,chh*.5),fam:'BC',w:800,anchor:'middle'});
+      s+=tx(x+16,y+chh*.3,k==='shots'?'Strzały (celne)':m.lab,{size:26,fam:'BC',w:600,ls:3,up:true,fill:C.pale});
+      if(rr&&rr<=15)s+=tx(x+cw-16,y+chh*.3,`#${rr} w lidze`,{size:24,fam:'BA',w:600,anchor:'end',fill:'#e8e8ea'});
+      s+=tx(x+cw/2,y+chh*.8,vt,{size:Math.min(84,chh*.56),fam:'BC',w:800,anchor:'middle'});
     });
     return shell(s+footerV(p),bg);
   },
@@ -576,13 +576,13 @@ const cmp={
   svg(p,bg){if(isV())return this.svgV(p,bg);
     const H=header({...p,date1:'',date2:''});let s=H.svg;
     const y0=H.bottom+62,ks=(p.keys||[]).slice(0,7);
-    s+=`<g filter="url(#sh)">`+tx(104,y0+30,sn(p.a),{size:52,fam:'BC',w:800,ls:2,up:true,fill:'#fff'})+tx(1816,y0+30,sn(p.b),{size:52,fam:'BC',w:800,ls:2,up:true,anchor:'end',fill:C.pale})+`</g>`;
+    s+=`<g filter="url(#sh)">`+tx(104,y0+32,sn(p.a),{size:60,fam:'BC',w:800,ls:2,up:true,fill:'#fff'})+tx(1816,y0+32,sn(p.b),{size:60,fam:'BC',w:800,ls:2,up:true,anchor:'end',fill:C.pale})+`</g>`;
     const top=y0+58,rh=Math.min(84,(972-top)/Math.max(ks.length,1));
     ks.forEach((k,i)=>{
       const m=CM[k],va=m.f(AG[p.a]),vb=m.f(AG[p.b]),mx=Math.max(va,vb,.0001),y=top+i*rh;
       const wa=330*va/mx,wb=330*vb/mx,mid=960,yy=y+rh*.55;
-      s+=`<g filter="url(#sh)">`+tx(104,yy+10,fmt(va,m.d),{size:46,fam:'BC',w:800})+tx(1816,yy+10,fmt(vb,m.d),{size:46,fam:'BC',w:800,anchor:'end'})+
-        tx(mid,y+rh*.38,m.lab,{size:24,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
+      s+=`<g filter="url(#sh)">`+tx(104,yy+12,fmt(va,m.d),{size:54,fam:'BC',w:800})+tx(1816,yy+12,fmt(vb,m.d),{size:54,fam:'BC',w:800,anchor:'end'})+
+        tx(mid,y+rh*.38,m.lab,{size:28,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
       s+=`<rect x="${mid-14-wa}" y="${y+rh*.5}" width="${wa}" height="14" rx="7" fill="${barCol(p.a)}" stroke="#fff" stroke-width="1.5"/><rect x="${mid+14}" y="${y+rh*.5}" width="${wb}" height="14" rx="7" fill="${barCol(p.b)}" stroke="#fff" stroke-width="1.5"/>`;
     });
     return shell(s+footer(p),bg);
@@ -590,13 +590,13 @@ const cmp={
   svgV(p,bg){
     const H=headerV({...p,date1:'',date2:''});let s=H.svg;
     const y0=H.bottom+40,ks=(p.keys||[]).slice(0,7);
-    s+=`<g filter="url(#sh)">`+tx(80,y0+30,sn(p.a),{size:44,fam:'BC',w:800,ls:2,up:true,fill:'#fff'})+tx(1000,y0+30,sn(p.b),{size:44,fam:'BC',w:800,ls:2,up:true,anchor:'end',fill:C.pale})+`</g>`;
+    s+=`<g filter="url(#sh)">`+tx(80,y0+32,sn(p.a),{size:52,fam:'BC',w:800,ls:2,up:true,fill:'#fff'})+tx(1000,y0+32,sn(p.b),{size:52,fam:'BC',w:800,ls:2,up:true,anchor:'end',fill:C.pale})+`</g>`;
     const top=y0+50,rh=Math.min(104,(1226-top)/Math.max(ks.length,1));
     ks.forEach((k,i)=>{
       const m=CM[k],va=m.f(AG[p.a]),vb=m.f(AG[p.b]),mx=Math.max(va,vb,.0001),y=top+i*rh;
-      const wa=290*va/mx,wb=290*vb/mx,mid=540,yy=y+rh*.55;
-      s+=`<g filter="url(#sh)">`+tx(80,yy+10,fmt(va,m.d),{size:42,fam:'BC',w:800})+tx(1000,yy+10,fmt(vb,m.d),{size:42,fam:'BC',w:800,anchor:'end'})+
-        tx(mid,y+rh*.38,m.lab,{size:22,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
+      const wa=270*va/mx,wb=270*vb/mx,mid=540,yy=y+rh*.55;
+      s+=`<g filter="url(#sh)">`+tx(80,yy+12,fmt(va,m.d),{size:50,fam:'BC',w:800})+tx(1000,yy+12,fmt(vb,m.d),{size:50,fam:'BC',w:800,anchor:'end'})+
+        tx(mid,y+rh*.38,m.lab,{size:26,fam:'BC',w:600,ls:2,up:true,anchor:'middle',fill:C.pale})+`</g>`;
       s+=`<rect x="${mid-14-wa}" y="${y+rh*.5}" width="${wa}" height="14" rx="7" fill="${barCol(p.a)}" stroke="#fff" stroke-width="1.5"/><rect x="${mid+14}" y="${y+rh*.5}" width="${wb}" height="14" rx="7" fill="${barCol(p.b)}" stroke="#fff" stroke-width="1.5"/>`;
     });
     return shell(s+footerV(p),bg);
@@ -630,28 +630,28 @@ const fact={
   sugg(){return facts()},
   svg(p,bg){if(isV())return this.svgV(p,bg);
     let s='';
-    s+=`<g filter="url(#sh)"><rect x="104" y="88" width="40" height="6" fill="#fff"/>`+tx(158,98,'#RTSstat · '+(p.tag||'Liczba'),{size:26,fam:'BC',w:800,ls:4,up:true});
+    s+=`<g filter="url(#sh)"><rect x="104" y="88" width="40" height="6" fill="#fff"/>`+tx(158,100,'#RTSstat · '+(p.tag||'Liczba'),{size:30,fam:'BC',w:800,ls:4,up:true});
     const big=String(p.big||''),fs=Math.min(520,Math.max(160,1500/Math.max(big.length,1)*1.15));
     const bw=mw(big,fs,'BC',800);
     s+=tx(104,700,big,{size:fs,fam:'BC',w:800});
     const lx=Math.min(104+bw+50,980),lw=1816-lx;
-    const lab=wrap(p.label||'',lw,64,'BC',800).slice(0,4);
-    lab.forEach((l,i)=>{s+=tx(lx,470+i*70,l,{size:64,fam:'BC',w:800,up:true,ls:1})});
-    let yy=470+lab.length*70+16;
-    [p.l1,p.l2].filter(Boolean).forEach((l,i)=>{wrap(l,lw,34,'BA',400).slice(0,2).forEach(ln=>{s+=tx(lx,yy,ln,{size:34,fam:'BA',w:400,fill:'#fff1f1'});yy+=44})});
+    const lab=wrap(p.label||'',lw,72,'BC',800).slice(0,4);
+    lab.forEach((l,i)=>{s+=tx(lx,470+i*78,l,{size:72,fam:'BC',w:800,up:true,ls:1})});
+    let yy=470+lab.length*78+16;
+    [p.l1,p.l2].filter(Boolean).forEach((l,i)=>{wrap(l,lw,40,'BA',400).slice(0,2).forEach(ln=>{s+=tx(lx,yy,ln,{size:40,fam:'BA',w:400,fill:'#fff1f1'});yy+=50})});
     s+='</g>';
     return shell(s+footer(p),bg);
   },
   svgV(p,bg){
     let s='';
-    s+=`<g filter="url(#sh)"><rect x="80" y="276" width="40" height="6" fill="#fff"/>`+tx(134,286,'#RTSstat · '+(p.tag||'Liczba'),{size:24,fam:'BC',w:800,ls:4,up:true});
+    s+=`<g filter="url(#sh)"><rect x="80" y="276" width="40" height="6" fill="#fff"/>`+tx(134,288,'#RTSstat · '+(p.tag||'Liczba'),{size:28,fam:'BC',w:800,ls:4,up:true});
     const big=String(p.big||'');let fs=460;while(fs>140&&mw(big,fs,'BC',800)>920)fs-=10;
     const by=340+fs*.78;
     s+=tx(80,by,big,{size:fs,fam:'BC',w:800});
-    const lab=wrap(p.label||'',920,56,'BC',800).slice(0,4);
-    lab.forEach((l,i)=>{s+=tx(80,by+84+i*62,l,{size:56,fam:'BC',w:800,up:true,ls:1})});
-    let yy=by+84+lab.length*62+10;
-    [p.l1,p.l2].filter(Boolean).forEach(l=>{wrap(l,920,32,'BA',400).slice(0,2).forEach(ln=>{s+=tx(80,yy,ln,{size:32,fam:'BA',w:400,fill:'#fff1f1'});yy+=42})});
+    const lab=wrap(p.label||'',920,64,'BC',800).slice(0,4);
+    lab.forEach((l,i)=>{s+=tx(80,by+90+i*70,l,{size:64,fam:'BC',w:800,up:true,ls:1})});
+    let yy=by+90+lab.length*70+10;
+    [p.l1,p.l2].filter(Boolean).forEach(l=>{wrap(l,920,36,'BA',400).slice(0,2).forEach(ln=>{s+=tx(80,yy,ln,{size:36,fam:'BA',w:400,fill:'#fff1f1'});yy+=46})});
     s+='</g>';
     return shell(s+footerV(p),bg);
   },

@@ -374,7 +374,7 @@ const rival={
 };
 
 /* --- mecz --- */
-function fixOpts(){return played.slice().sort((a,b)=>b[1]-a[1]||b[0]-a[0]).map(f=>[f[0],`K${f[1]} · ${sn(f[3])} ${f[5]}:${f[6]} ${sn(f[4])}`])}
+function fixOpts(){return played.filter(f=>f[3]===WID||f[4]===WID).sort((a,b)=>b[1]-a[1]||b[0]-a[0]).map(f=>[f[0],`K${f[1]} · ${sn(f[3])} ${f[5]}:${f[6]} ${sn(f[4])}`])}
 const matchT={
   name:'Mecz',
   init(){
